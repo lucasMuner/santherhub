@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load permission_tags %}
+{% block title %}Registrar{% endblock %}
+{% block content %}
+{% block head %}
+<script src="{% static 'js/form-employee.js' %}" defer></script>
+<script src="{% static 'js/dinamic-form.js' %}" defer></script>
+<script src="{% static 'js/sidebar.js' %}" defer></script>
+
+{% endblock %}
+
+<body class="relative overflow-x-hidden">
+    
+    <div class="h-[100vh] flex flex-wrap">
+        {% if user|has_role:'supervisor,gerente,administrador' %}
+            {% include 'aside.html' with active_tab='employees' %}
+        {% endif %}
+        <div class="lg:ml-[240px] flex-1 overflow-y-auto flex gap-4 bg-secondary 2xl:ml-[300px]">
+            <div class="flex-1 flex flex-col gap-2">
+                <header class="flex items-center gap-2 px-8 py-6 2xl:px-12">
+                    <div class="flex items-center gap-2">
+                        <a href="{% url 'get_employees' %}" class="text-typography-primary rounded-md cursor-pointer">
+                            <img src="{% static 'assets/svg/arrow-left.svg' %}" alt="">
+                        </a>
+                        <h2 class="font-bold text-xl md:text-2xl 2xl:text-3xl">Registrar funcionário</h2>
+                    </div>
+                </header>
+                
+                <main class="px-8 pb-8 2xl:px-12">
+
+                    <form class="flex flex-col" method="POST" action="{% url 'register-employee' %}" enctype="multipart/form-data">
+                        
+                        {% csrf_token %}
+                        
+                        <div class="flex flex-wrap gap-x-4">
+                            
+                            <fieldset class="min-w-full flex-1 flex justify-center flex-wrap gap-8 border border-zinc-950/30 p-4 mb-4 rounded-md md:min-w-[60%] md:justify-start">
+                                <legend class="font-medium text-primary">Informações pessoais</legend>
+                                <div class=" flex items-center gap-1 flex-col group">
+                                    <label for="id_photo">Foto</label>
+                                    <label class="relative flex justify-center items-center cursor-pointer overflow-hidden w-28 h-28 rounded-full" for="id_photo">
+                                        
+                                       
+                                        <img class="flex justify-center items-center object-cover object-top photo-location" src="{% static 'assets/profile-icon.png' %}" alt="">
+                                       
+                                        
+                                        
+                                        <label for="id_photo"
+                                            class=" absolute top-0 left-0 flex justify-center items-center w-full h-full invisible group-hover:visible group-hover:bg-zinc-950/10">
+                                            <img class="w-1/3 cursor-pointer" src="{% static 'assets/pencil.png' %}" alt="">
+                                        </label>
+                                    </label>
+                                    <input class="hidden input-photo" type="file" name="photo" id="id_photo" accept="image/">
+                                    {{ form.photo.errors }}
+                                    
+                                </div>
+                               
+                                
+                                <div class="flex-1 w-full flex flex-col gap-4 ">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <div class="w-1/2 flex flex-col md:w-1/3">
+                                            {{ form.re.label_tag}}
+                                            {{ form.re }}
+                                            {{ form.re.errors }}
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="flex flex-wrap gap-4">
+                                        <div class="flex-1 flex flex-col lg:w-full">
+                                            {{ form.first_name.label_tag }}
+                                            {{ form.first_name }}
+                                            {{ form.first_name.errors }}
+                                        </div>
+                                        <div class="w-fit flex-1 flex flex-col lg:w-full">
+                                            {{ form.last_name.label_tag }}
+                                            {{ form.last_name }}
+                                            {{ form.last_name.errors }}
+                                        </div>
+                                        
+                                        <div class="w-fit flex-1 flex flex-col lg:w-full">
+                                            {{ form.password.label_tag }}
+                                            {{ form.password }}
+                                            <div class="flex-1 flex flex-wrap gap-2">
+                                                <button class="font-medium text-primary button-generate-password hover:text-typography-primary">Gerar senha</button>
+                                            </div>
+                                            {{ form.password.errors }}
+                                        </div>
+
+                                        <div class="w-full flex flex-wrap gap-2">
+                                            <div class="flex-1 flex flex-col">
+                                                {{ form.hire_date.label_tag}}
+                                                {{ form.hire_date }}
+                                                {{ form.hire_date.errors }}
+                                            </div>
+                                            <div class="flex-1 flex flex-col">
+                                                {{ form.last_vacations.label_tag}}
+                                                {{ form.last_vacations }}
+                                                {{ form.last_vacations.errors }}
+                                            </div>
+                                        </div>
+                                            
+                                
+                                    </div>
+                                </div>
+                                
+                            </fieldset>
+                            <fieldset class="flex-1 flex flex-col gap-2 border border-zinc-950/30 p-4 mb-4 rounded-md md:max-w-[50%] ">
+                                <legend class="font-medium text-primary">Informações de contato</legend>
+                                <div class="flex flex-wrap flex-col gap-2">
+                                    <div class=" flex flex-col">
+                                        {{ form.email.label_tag }}
+                                        {{ form.email }}
+                                        {{ form.email.errors }}
+                                    </div>
+                                    <div class="flex flex-col ">
+                                        {{ form.phone.label_tag }}
+                                        {{ form.phone }}
+                                        {{ form.phone.errors }}
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="flex flex-wrap gap-x-4">
+                            <fieldset class="flex flex-col gap-2 border border-zinc-950/30 p-4 mb-4 rounded-md min-w-[60%]">
+                                <legend class="font-medium text-primary">Endereço</legend>
+                                <div class="w-full flex flex-wrap gap-2 md:w-3/5">
+                                    <div class="w-full flex flex-col">
+                                        {{ form.street.label_tag }}
+                                        {{ form.street }}
+                                        {{ form.street.errors }}
+                                    </div>
+                                    <div class="w-full flex flex-col">
+                                        {{ form.neighborhood.label_tag }}
+                                        {{ form.neighborhood }}
+                                        {{ form.neighborhood.errors }}
+                                    </div>
+                            
+                                </div>
+                            </fieldset>
+                            
+                            
+                            <fieldset class="flex-1 flex flex-col gap-2 border border-zinc-950/30 p-4 mb-4 rounded-md">
+                                <legend class="font-medium text-primary">Cargo e permissão</legend>
+                                <div class="flex flex-col gap-2">
+                                    <div class="flex flex-col w-full ">
+                                        {{form.job.label_tag}}
+                                        {{form.job}}
+                                        {{form.job.errors}}
+                                        
+                                    </div>
+                                    <div class="flex flex-col w-full">
+                                        {{ form.role.label_tag }}
+                                        {{ form.role }}
+                                        {{ form.role.errors }}
+                                    </div>
+                            
+                                </div>
+                            
+                            </fieldset>
+                        </div>
+                        <div class="flex flex-wrap gap-x-4">
+                            <fieldset class="flex-1 flex flex-col gap-2 border border-zinc-950/30 p-4 mb-4 rounded-md min-w-[60%]">
+                                <legend class="font-medium text-primary">Linha e mais</legend>
+                                <div class="flex flex-col gap-4">
+                                    <div class="flex flex-wrap gap-4">
+                                        <div class="flex flex-col w-full md:w-1/3 field-class">
+                                            {{ form.class_field.label_tag }}
+                                            {{ form.class_field }}
+                                            {{ form.class_field.errors }}
+                                        </div>
+                                        <div class="flex flex-col w-full md:w-1/3">
+                                            {{ form.production_line.label_tag }}
+                                            {{ form.production_line }}
+                                            {{ form.production_line.errors }}
+                                            <p class="text-sm hidden lg:block">Pressione <kbd class="text-inherit">“Control”</kbd>, ou <kbd class="text-inherit">“Command”</kbd>, para selecionar mais de um.</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-wrap gap-4">
+                                        <div class="flex flex-col w-full md:w-1/3">
+                                            {{ form.cost_center.label_tag }}
+                                            {{ form.cost_center }}
+                                            {{ form.cost_center.errors }}
+                                        </div>
+                                        <div class="flex flex-col w-full md:w-1/3">
+                                            {{ form.state.label_tag }}
+                                            {{ form.state }}
+                                            {{ form.state.errors }}
+                                        </div>
+                                    </div>
+                            
+                                </div>
+                            
+                            </fieldset>
+                            <fieldset class="flex-1 w-full flex flex-col gap-2 border border-zinc-950/30 p-4 mb-4 rounded-md field-courses">
+                                <legend class="font-medium text-primary">Cursos</legend>
+                                {{form.courses}}
+                                {{form.courses.errors}}
+                            </fieldset>
+                        </div>
+                        
+                    
+                        <button type="submit" class="self-end font-semibold w-fit bg-primary text-white rounded-md px-6 py-3">Registrar</button>
+                        
+                    </form>
+                    
+                </main>
+                
+            </div>
+        </div>
+    </div>
+    {% include 'message.html' %}
+</body>
+{% endblock %}

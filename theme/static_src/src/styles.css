@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+* {
+    @apply text-typography-primary;
+}
+.input-primary {
+    @apply rounded-lg py-2 border border-zinc-950/20;
+}
+.badge-production-line {
+    @apply bg-zinc-100 rounded-md text-sm px-4 py-[2px]
+}
+.badge-state {
+    @apply text-sm px-4 py-[2px];
+}
+.badge-active {
+    @apply badge-state bg-emerald-400;
+}
+.badge-vacation {
+    @apply badge-state bg-yellow-400;
+}
+.badge-distant {
+    @apply badge-state bg-red-400;
+}
+.label-active {
+    @apply bg-primary text-white;
+}
+.input-disabled {
+    @apply bg-[#ECECEC];
+}
+.button-primary {
+    @apply w-[100px] rounded-md bg-primary text-white px-4 py-2 hover:bg-primary/90;
+}
+.active-button {
+    @apply border-b-primary font-semibold text-typography-primary;
+}
+label {
+    @apply font-medium;
+}
+input[type='email'], input[type='password'] {
+    @apply rounded-md border border-zinc-950/20 py-2;
+}
+input:focus {
+    @apply ring-primary ring-offset-primary;
+}
+.errorlist > li {
+    @apply text-red-500;
+}
+.errorlist ~ input {
+    @apply bg-red-200;
+}
+
+.messages {
+    animation: animation-messages 4s forwards;
+    transition: all 0.3s ease-in-out;
+}
+.popups {
+    animation: animation-popup .3s;
+    transition: all 0.3s ease-in-out;
+}
+
+@keyframes animation-messages {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    20% {
+        transform: translate(0);
+        opacity: 1;
+    }
+    80% {
+        transform: translate(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(200%);
+        opacity: 0;
+    }
+}
+
+@keyframes animation-messages-mobile {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    20% {
+        transform: translate(0);
+        opacity: 1;
+    }
+    80% {
+        transform: translate(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-200%);
+        opacity: 0;
+    }
+}
+
+
+@keyframes animation-popup {
+    from {
+        opacity: 0;
+        transform: translateY(-200%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.container-section::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    height: 50px; 
+  }
+
+.container-section::-webkit-scrollbar {
+    width: 0.5em; 
+  }
+
+  .container-section::-webkit-scrollbar-thumb {
+    background-color:#074EA2;
+    border-radius: 8px; /* Cor da alça da barra de rolagem */
+  }
+
+
+#slideA:checked ~ .s1 {
+    margin-left: 0;
+}
+#slideB:checked ~ .s1 {
+    margin-left: -100%;
+}
+#slideC:checked ~ .s1 {
+    margin-left: -200%;
+}
+#slideD:checked ~ .s1 {
+    margin-left: -300%;
+}
+#slideE:checked ~ .s1 {
+    margin-left: -400%;
+}
+#slideG-T:checked ~ .s1 {
+    margin-left: -500%;
+}
+.errorlist {
+    color: rgb(235, 0, 0);
+}
+.error {
+    background-color: red;
+}
+
+select[readonly] {
+  background: #eee; 
+  pointer-events: none;
+  touch-action: none;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  display: none;
+}

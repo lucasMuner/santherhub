@@ -1,0 +1,97 @@
+{% load static %}
+<div
+    class="absolute md:fixed top-0 left-0 z-50 flex justify-center items-center w-full min-h-full h-min md:h-full bg-zinc-950/40 popup-show-employee hidden">
+    <div
+        class="relative flex flex-col w-screen min-h-screen rounded-md bg-white shadow-md md:min-h-0 md:flex-row md:w-[90%] md:h-[60%] lg:w-3/5 lg:h-[90%] overflow-hidden popups">
+        <div class="relative w-full h-1/5 bg-primary p-8 md:w-1/3 md:min-h-full">
+            <div class="h-full flex flex-col justify-center items-center gap-4 py-2">
+
+                <button class="absolute top-8 right-8 close-popup-employee md:none">
+                    <img src="{% static 'assets/svg/close-white.svg' %}" alt="">
+                </button>
+
+                <div class="flex justify-center items-center w-[100px] h-[100px] md:w-[120px] md:h-[120px] rounded-full overflow-hidden bg-secondary">
+                    <img class="object-cover object-top field-photo w-[120px] h-[120px]" src="" alt="">
+                </div>
+
+                <div class="flex items-center flex-col gap-2 w-full">
+                    <p class="font-semibold text-white text-center field-name md:text-xl"></p>
+                    <p class="bg-zinc-100 rounded-md px-2 py-1 text-center field-job"></p>
+                    <p class="md:absolute rounded top-8 right-8 field-state text-center px-4 py-1 w-fit"></p>
+                </div>
+                <a class="absolute top-8 left-8 mt-0 flex gap-2 p-2 bg-zinc-100 rounded-md button-update-employee hover:bg-zinc-200 md:mt-16 md:static"
+                    href="">
+                    <img class="w-4" src="{% static 'assets/svg/edit.svg' %}" alt="">
+                    <p class="hidden lg:block  text-sm">Atualizar</p>
+                </a>
+            </div>
+
+        </div>
+        <div class="relative w-full h-full p-8 md:w-2/3">
+            <button class="hidden md:block absolute top-8 right-8 close-popup-employee">
+                <img src="{% static 'assets/svg/close.svg' %}" alt="">
+            </button>
+            <div class="flex-1 flex flex-col items-center gap-2 lg:items-start">
+                <div class="flex gap-2">
+                    <button
+                        class="border-b-2 border-b-transparent px-4 py-2 text-typography-secondary button-get-info active-button">Dados</button>
+                    <button
+                        class="px-4 py-2 border-b-2 border-b-transparent text-typography-secondary button-get-availability">Disponibilidade</button>
+                </div>
+
+                <div class="h-full flex flex-col gap-2 container-info">
+                    <div class="flex flex-col gap-2 py-2 w-fit h-2/5">
+                        <h2 class="text-lg font-medium text-primary">Informações</h2>
+                        <div class="flex flex-col gap-2 container-info">
+                            <div class="flex gap-2">
+                                <p class="font-medium">Re:</p>
+                                <p class="field-re"></p>
+                            </div>
+                            <div class="flex  gap-2">
+                                <p class="font-medium">Email:</p>
+                                <p class="field-email"></p>
+                            </div>
+                            <div class="flex gap-2">
+                                <p class="font-medium">Telefone:</p>
+                                <p class="field-phone"></p>
+                            </div>
+                            <div class="flex gap-2">
+                                <p class="font-medium">Turma: </p>
+                                <p class="field-class"></p>
+                            </div>
+                            <div class="flex gap-2">
+                                <p class="font-medium">Data da contração: </p>
+                                <p class="field-class field-hire-date"></p>
+                            </div>
+                            <div class="flex gap-2">
+                                <p class="font-medium">Data da ultima férias: </p>
+                                <p class="field-last-vacations"></p>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 h-2/5">
+                        <h3 class="text-primary font-semibold text-lg">Linhas</h3>
+                        <ul class="flex flex-wrap gap-2 list-none field-production-line">
+
+
+                        </ul class="list-none">
+                    </div>
+                    <div class="flex flex-col gap-2 py-2 w-fit h-1/5">
+                        <h3 class="text-primary font-semibold text-lg">Cursos</h3>
+                        <div class="flex flex-wrap gap-2 container-all-courses w-4/5">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center w-full rounded-md container-availability hidden mt-4">
+                    <div class="place-self-center grid grid-cols-3 gap-4 container-availability-grid w-full md:w-4/5"></div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>

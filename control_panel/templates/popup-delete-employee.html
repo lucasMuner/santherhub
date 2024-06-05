@@ -1,0 +1,21 @@
+{% load static %}
+<div
+    class="hidden fixed bg-zinc-950/30 z-50 inset-0 w-full h-full justify-center items-center popup-delete-employee ">
+    <div class="flex flex-col gap-6 bg-white rounded-md p-6 w-[90%] md:w-1/2 lg:w-1/3 popups">
+        <div class="flex flex-col items-center gap-2">
+            <img class="bg-red-50 rounded-md p-2" width="50" src="{% static 'assets/svg/warning.svg' %}" alt="">
+            <div>
+                <h2 class="font-semibold text-lg text-center">Você tem certeza?</h2>
+                <p class="text-typography-secondary leading-5 text-center">O funcionário {{current_production_line.name}} será excluído e todas as informações serão apagadas</p>
+            </div>
+        </div>
+        <div class="w-full flex flex-col gap-2">
+            <button
+                class="w-full rounded-md px-4 py-2 bg-zinc-100 button-cancel-delete-employee hover:bg-zinc-200 duration-150">Cancelar</button>
+            <a href="{% url 'delete_employee' re=re %}">
+                <button
+                    class="w-full rounded-md px-4 py-2 bg-red-500 text-white hover:bg-red-600 duration-150">Confirmar</button>
+            </a>
+        </div>
+    </div>
+</div>

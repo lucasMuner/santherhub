@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load permission_tags %}
+{% block title %}
+Linha - {{current_production_line.name}}
+{% endblock %}
+{% block content %}
+{% block head %}
+<script src="{% static 'js/carousel-slide.js' %}" defer></script>
+<script src="{% static 'js/sidebar.js' %}" defer></script>
+{% if user|has_role:'supervisor,gerente,administrador' %}
+    <script src="{% static 'js/get-details-employee.js' %}" defer></script>
+    <script src="{% static 'js/popup-confirm.js' %}" defer></script>
+{% endif %}
+
+
+{% endblock %}
+
+<body class="relative min-h-[100vh] overflow-x-hidden">
+
+    <div class="flex">
+        {% include 'aside.html' with active_tab='panel' %}
+        <div class="lg:ml-[240px] flex-1 min-h-screen flex flex-col bg-secondary 2xl:ml-[300px]">
+            <header class="flex justify-between items-center px-8 py-6 2xl:px-12">
+                <div class="flex items-center gap-2">
+                    
+                    <button id="toggleButton" class=" text-typography-primary rounded-md cursor-pointer">
+                        <a href="{% url 'get_panel' %}" class=" text-typography-primary rounded-md cursor-pointer">
+                            <img src="{% static 'assets/svg/arrow-left.svg' %}" alt="">
+                        </a>
+                    </button>
+                    <div>
+                        <h2 class="font-bold text-xl md:text-2xl 2xl:text-3xl">Linha {{current_production_line.name}}</h2>
+                        <p class="hidden text-sm text-typography-secondary md:block">Data de criação: {{ current_production_line.created_at}}</p>
+                    </div>
+                </div>
+                {% if user|has_role:'supervisor,gerente,administrador' %}
+                    <div class="flex items-center gap-2">
+                        
+                        <label class="hidden md:block" for="production-lines">
+                            Linha:
+                        </label>
+                        
+                        <select class="rounded-md py-2 select-production-line input-primary" name="production-lines" id="production-lines">
+                            {% for production_line in production_lines %}
+                                {% if production_line.name == current_production_line.name %}
+                                    <option id="" data-slug="{{production_line.slug}}" value="{{production_line.id}}" selected>{{production_line.name}}</option>
+                                {% else %}
+                                    <option id="" data-slug="{{production_line.slug}}" value="{{production_line.id}}">{{production_line.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        
+                        {% if user|has_role:'administrador' %}
+                            <button class="flex gap-2 rounded-md bg-red-700 p-2 hover:bg-red-600 duration-150 button-delete">
+                                <img src="{% static 'assets/svg/trash.svg' %}" alt="">
+                            </button>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </header>
+            <main class="flex-1 flex flex-col gap-4 p-8 pt-0 2xl:px-12">
+                <div class="w-full gap-2 ">
+                    <div class="flex flex-col gap-2 rounded-md  p-4 border border-zinc-950/20">
+                        <p class="text-zinc-700">Quantidade de pessoas na linha</p>
+                        <div class="flex gap-4">
+                            <div class="rounded-md bg-primary p-2 w-fit">
+                                <img src="{% static 'assets/svg/users-white.svg' %}" alt="">
+                            </div>
+                            <p class="text-3xl text-primary font-semibold">{{qty_employees}}</p>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div
+                    class="relative flex-1 flex flex-col gap-4 w-full p-6 bg-white rounded-md border border-zinc-950/20">
+                    
+                    <div class="absolute flex justify-center flex-wrap gap-1 top-6 left-0 right-0 labels-production-line z-10 md:left-auto md:right-12">
+                        {% for class_field in employees_by_class %}
+
+                        <label class="py-1 px-2 rounded-md border border-zinc-950/20  cursor-pointer {% if forloop.counter == 1 %} label-active {% endif %}"
+                            for="slide{{class_field}}">{{class_field}}</label>
+                        {% endfor %}
+                        <label
+                            class="py-1 px-2 rounded-md border border-zinc-950/20 cursor-pointer"
+                            for="slideG-T">ADM</label>
+                    </div>
+                    <div class="flex-1 flex overflow-x-hidden container-section">
+                        {% for class_field in employees_by_class %}
+                            {% if forloop.counter == 1 %}
+                                <input class="hidden" type="radio" name="slide" id="slide{{class_field}}" checked>
+                            {% else %}
+                                <input class="hidden" type="radio" name="slide" id="slide{{class_field}}">
+                            {% endif %}
+                            <input class="hidden" type="radio" name="slide" id="slideG-T">
+                        {% endfor %}
+
+
+                        {% for class_field, employees in employees_by_class.items %}
+                        <section id="slide{{class_field}}"
+                
+                            class="min-w-full w-[40px] h-full duration-300 {% if forloop.counter == 1 %} s1 {% endif %} overflow-hidden">
+                            <div class="flex-1 flex flex-col gap-4">
+                                <h3 class="font-semibold text-center text-lg mt-12 md:mt-0 md:text-left">Turma {{class_field}}</h3>
+                                <div class="flex justify-center flex-wrap gap-4">
+                                    {% for employee in employees %}
+                                        {% include 'employee-card.html' %}
+                                    {% empty %}
+                                        <p class="text-typography-secondary flex-1 flex justify-center items-center">Nenhum funcionário nesse turma!</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+
+                        </section>
+                        {% endfor %}
+                        <section id="slideG-T"
+                            class="min-w-full w-[50px] h-full duration-30">
+                            <div class="flex-1 flex flex-col gap-4">
+                                <h3 class="font-semibold text-center text-lg mt-12 md:mt-0 md:text-left">ADM</h3>
+                                <div class="flex justify-center flex-wrap gap-4">
+                                    {% for employee in employees_without_class %}
+                                        {% include 'employee-card.html' %}
+                                    {% empty %}
+                                        <p class="flex-1 text-typography-secondary flex justify-center items-center">Nenhum funcionário nesse turma!</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        
+                        
+                        </section>
+                    </div>
+
+                </div>
+
+            </main>
+        </div>
+    </div>
+    {% if user|has_role:'supervisor,gerente,administrador' %}
+        {% include 'popup-employee.html' %}
+        <div class="hidden fixed bg-zinc-950/20 z-50 inset-0 w-full h-full justify-center items-center popup-confirm backdrop-blur-sm">
+            <div class="bg-white flex flex-col gap-6 rounded-md p-6 w-[90%] md:w-1/2 lg:w-1/3">
+                <div class="flex flex-col items-center gap-2">
+                    <img class="bg-red-50 rounded-md p-2" width="50" src="{% static 'assets/svg/warning.svg' %}" alt="">
+                    <div>
+                        <h2 class="font-semibold text-lg text-center">Você tem certeza?</h2>
+                        <p class="text-typography-secondary leading-5 text-center">A linha {{current_production_line.name}} será excluída e todos os funcionários serão desvinculados</p>
+                    </div>
+                </div>
+                <div class="w-full flex flex-col gap-2">
+                    <button class="w-full rounded-md px-4 py-2 bg-zinc-100 button-cancel hover:bg-zinc-200 duration-150">Cancelar</button>
+                    <a href="{% url 'remove_production_line' slug=current_production_line.slug %}">
+                        <button class="w-full rounded-md px-4 py-2 bg-red-500 text-white hover:bg-red-600 duration-150">Confirmar</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</body>
+{% endblock %}

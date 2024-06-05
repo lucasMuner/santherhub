@@ -1,0 +1,33 @@
+{% if employees.has_other_pages %}
+    <ul class="flex-1 flex justify-center items-end gap-2 pagination my-8">
+        {% if employees.has_previous %}
+            <li class="flex justify-center items-center w-8 h-8 border border-zinc-950/20 p-2 hover:bg-zinc-100 rounded-md">
+                <a href="?pagina={{ employees.previous_page_number }}">&laquo;</a>
+            </li>
+        {% endif %}
+
+        <li class="bg-primary text-white flex justify-center items-center w-8 h-8 border border-zinc-950/20 p-2 hover:bg-primary/90 rounded-md">
+            <a href="?pagina={{ employees.number }}">{{ employees.number }}</a>
+        </li>
+
+        {% if employees.number < employees.paginator.num_pages %}
+            {% if employees.next_page_number < employees.paginator.num_pages %}
+                {% if employees.next_page_number|add:'2' < employees.paginator.num_pages %}
+                    <li class="flex justify-center items-center w-8 h-8 border border-zinc-950/20 p-2 hover:bg-zinc-200 rounded-md">
+                        <span>...</span>
+                    </li>
+                {% endif %}
+            {% endif %}
+
+            <li class="flex justify-center items-center w-8 h-8 border border-zinc-950/20 p-2 hover:bg-zinc-200 rounded-md">
+                <a href="?pagina={{ employees.paginator.num_pages }}">{{ employees.paginator.num_pages }}</a>
+            </li>
+        {% endif %}
+
+        {% if employees.has_next %}
+            <li class="flex justify-center items-center w-8 h-8 border border-zinc-950/20 p-2 hover:bg-zinc-100 rounded-md">
+                <a href="?pagina={{ employees.next_page_number }}">&raquo;</a>
+            </li>
+        {% endif %}
+    </ul>
+{% endif %}

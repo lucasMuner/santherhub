@@ -1,0 +1,776 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load permission_tags %}
+{% block title %}Painel{% endblock %}
+{% block content %}
+{% block head %}
+<script src="{% static 'js/popup-set-password.js' %}" defer></script>
+<script src="{% static 'js/form-employee.js' %}" defer></script>
+{% if user|has_role:'administrador' %}
+<script src="{% static 'js/dinamic-form.js' %}" defer></script>
+{% endif %}
+<script src="{% static 'js/sidebar.js' %}" defer></script>
+<script src="{% static 'js/popup-create-production-line.js' %}" defer></script>
+
+
+
+{% endblock %}
+
+<body class="relative overflow-x-hidden">
+    
+
+    <div class="h-[100vh] flex flex-wrap">
+        {% include 'aside.html' with active_tab='teste_usuário' %}
+        <div class="lg:ml-[240px] flex-1 overflow-y-auto flex gap-4 2xl:ml-[300px]">
+            
+            <div class="flex-1 flex flex-col gap-2">
+                <header class="flex justify-between items-center gap-2 px-8 py-6 2xl:px-12">
+                    <div class="flex gap-2">
+                        <button id="toggleButton" class="text-zinc-950  rounded-md cursor-pointer lg:hidden">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                            </svg>
+                        </button>
+                        <h2 class="font-bold text-xl md:text-2xl 2xl:text-3xl">Bem-vindo, {{employee.first_name}}</h2>
+                    </div>
+                    
+
+                </header>
+
+                <main class="px-8 pb-8 2xl:px-12">
+                    <form class="flex flex-col" method="POST"
+                        enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+                        <div class="flex flex-wrap gap-x-4">
+
+                            <fieldset
+                                class="min-w-full flex-1 flex justify-center items-center flex-wrap gap-8 border border-zinc-950/10 p-4 mb-4 rounded-md md:min-w-[60%] md:justify-start">
+                                <legend class="font-medium text-primary">Informações pessoais</legend>
+                                <div class=" flex items-center gap-1 flex-col group">
+                                    <label for="id_photo">Foto</label>
+                                    <label class="relative cursor-pointer overflow-hidden w-36 h-36 rounded-full"
+                                        for="id_photo">
+
+                                        <img class="flex justify-center items-center object-cover object-top photo-location" src="{{form.instance.photo.url}}" alt="">
+
+
+                                        <label for="id_photo"
+                                            class=" absolute top-0 left-0 flex justify-center items-center w-full h-full invisible group-hover:visible group-hover:bg-zinc-950/10">
+                                            <img class="w-1/3 cursor-pointer" src="{% static 'assets/pencil.png' %}"
+                                                alt="">
+                                        </label>
+                                    </label>
+                                    <input class="hidden input-photo" type="file" name="photo" id="id_photo"
+                                        accept="image/">
+                                    {{ form.photo.errors }}
+                                    <div class="flex-1 flex flex-col lg:w-full">
+                                        <input class="text-center input-primary input-disabled" type="text" name="re" id="id_re" value="6188">
+
+                                    </div>
+
+                                </div>
+                                <div class="flex-1 w-full flex flex-col gap-4 ">
+                                    <div class="flex flex-wrap gap-4">
+                                        <div class="flex-1 flex flex-col lg:w-full">
+                                            {{ form.first_name.label_tag }}
+                                            {{ form.first_name }}
+                                            {{ form.first_name.errors }}
+                                        </div>
+                                        <div class="w-fit flex-1 flex flex-col lg:w-full">
+                                            {{ form.last_name.label_tag }}
+                                            {{ form.last_name }}
+                                            {{ form.last_name.errors }}
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-wrap gap-4">
+                                            <div class="w-fit flex-1 flex flex-col lg:w-full">
+                                                {{form.job.label_tag}}
+                                                {{form.job}}
+                                                {{form.job.errors}}
+                                            </div>
+                                            <div class="flex-1 flex flex-col lg:w-full">
+                                                {{ form.class_field.label_tag }}
+                                                {{ form.class_field }}
+                                                {{ form.class_field.errors }}
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-wrap gap-4">
+                                            <div class="flex-1 flex flex-col lg:w-full">
+                                                <label for="id_re">Área:</label>
+                                                <input class="input-primary input-disabled" type="text" name="re" id="id_re" value="PERSONAL CARE">
+                                            </div>
+                                            <div class="flex-1 flex flex-col lg:w-full">
+                                                <label for="id_re">Unidade:</label>
+                                                <input class="input-primary input-disabled" type="text" name="re" id="id_re" value="FADLO HAIDAR">
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-wrap gap-4">
+                                            <div class="flex-1 flex flex-col lg:w-full">
+                                                <label for="id_re">Tempo de Casa:</label>
+                                                <input class="input-primary input-disabled" type="text" name="re" id="id_re" value="2 anos">
+                                            </div>
+                                            <div class="flex-1 flex flex-col lg:w-full">
+                                                <label for="id_re">Tempo no cargo:</label>
+                                                <input class="input-primary input-disabled" type="text" name="re" id="id_re" value="7 meses">
+                                            </div>
+                                        </div>
+                                </div>
+
+                            </fieldset>
+                           <div class="flex-1 flex-col mb-4 gap-4 rounded-md "> 
+                            <div class="flex-1 flex flex-col gap-4 rounded-md ">
+                                <div class="flex-1 flex flex-col gap-4 rounded-md ">
+                                    <div class="flex justify-between items-center">
+                                        <h2 class="font-semibold text-xl">Linha</h2>
+                                    
+                                    </div>
+                                    <div class="flex flex-col gap-6">
+                                        {% if production_lines %}
+                                        <div
+                                            class="flex-1 gap-4 {% if production_lines|length == 1 %} grid-cols-1 {% else %} grid place-content-start grid-cols-3 md:grid-cols-4 lg:grid-cols-6 {% endif %}">
+                                            {% for production_line in production_lines %}
+                                            <a href="{% url 'get_production_line' slug=production_line.slug %}"
+                                                class="relative h-42 bg-primary/5 flex flex-col gap-2 justify-center items-center {% if production_lines|length != 1 %} aspect-1 {% endif %} px-6 py-12 rounded-md hover:scale-[101%] duration-300 border border-zinc-950/20 border-l-[5px] border-l-primary hover:bg-primary/10">
+                                                <p
+                                                    class="w-full flex justify-center items-center p-2 {% if production_lines|length != 1 %} h[100px] {% endif %} rounded-md text-center">
+                                                    <span class="text-primary font-bold md:text-lg">{{production_line.name}}</span>
+                                                </p>
+            
+                                            </a>
+            
+                                            {% endfor %}
+                                        </div>
+                                        {% else %}
+                                        <p class="text-typography-secondary text-center ">Nenhuma linha cadastrada!</p>
+            
+                                        {% endif %}
+            
+                                    </div>
+            
+            
+                                </div>
+                                <div class="flex-1 flex mt-4  flex-col gap-4 rounded-md">
+                                    <div class="flex-1 gap-4 {% if production_lines|length == 1 %} grid-cols-1 {% else %} grid place-content-start grid-cols-3 md:grid-cols-4 lg:grid-cols-6 {% endif %}">
+                                        <div class="relative h-6 bg-yellow-400 flex flex-col gap-2 justify-center items-center px-6 py-12 rounded-md hover:scale-[101%] duration-300 border border-zinc-950/20 border-l-[5px] border-l-primary ">
+                                            <p class="w-full flex justify-center items-center p-2 rounded-md text-center">
+                                                <span class="text-white font-bold md:text-lg">Disponibilidade</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                                                   
+                        </div>
+                        <div class="flex-1 flex flex-col gap-4 rounded-md">
+                            <h2 class="font-semibold text-xl">PCO</h2>
+                            <div class="flex-1 gap-4 {% if production_lines|length == 1 %} grid-cols-1 {% else %} grid place-content-start grid-cols-3 md:grid-cols-4 lg:grid-cols-6 {% endif %}">
+                                <div class="relative h-42 bg-emerald-400  flex flex-col gap-2 justify-center items-center px-6 py-12 rounded-md hover:scale-[101%] duration-300 border border-zinc-950/20 border-l-[5px] border-l-primary ">
+                                    <p class="w-full flex justify-center items-center p-2 rounded-md text-center">
+                                        <span class="text-primary font-bold md:text-lg">Elegível</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex-1 flex mt-4  flex-col gap-4 rounded-md">
+                                <a href="{% url 'get_journey'%}"><div class="flex-1 gap-4 {% if production_lines|length == 1 %} grid-cols-1 {% else %} grid place-content-start grid-cols-3 md:grid-cols-4 lg:grid-cols-6 {% endif %}">
+                                    <div class="relative h-6 bg-primary flex flex-col gap-2 justify-center items-center px-6 py-12 rounded-md hover:scale-[101%] duration-300 border border-zinc-950/20 border-l-[5px] border-l-primary ">
+                                            <span class="text-white font-bold md:text-lg">Jornada</span>
+                                    </div>
+                                </div></a>
+                            </div>
+
+                        </div>
+                    </div>
+                        <div class="flex flex-wrap gap-x-4">
+                    
+                        </div>
+                        <div class="flex flex-wrap gap-x-4 h-62">
+                            <div class="flex-1 w-full flex flex-col gap-2 border border-zinc-950/30 p-4 mb-4 rounded-md field-courses">
+                                <legend class="font-medium text-primary">Recados da Paróquia</legend>
+                                
+                                <!-- Recado 1 -->
+                                <div class="flex h-full flex-wrap gap-x-4">
+                                    <a href="#" class="flex-1 w-1/4 border border-gray-300 rounded-md p-4 hover:bg-gray-100">
+                                        <h3 class="font-semibold text-lg">Recado 1</h3>
+                                        <p>Conteúdo do recado 1...</p>
+                                    </a>
+                        
+                                    <!-- Recado 2 -->
+                                    <a href="#" class="flex-1 w-1/4 border border-gray-300 rounded-md p-4 hover:bg-gray-100">
+                                        <h3 class="font-semibold text-lg">Recado 2</h3>
+                                        <p>Conteúdo do recado 2...</p>
+                                    </a>
+                        
+                                    <!-- Recado 3 -->
+                                    <a href="#" class="flex-1 w-1/4 border border-gray-300 rounded-md p-4 hover:bg-gray-100">
+                                        <h3 class="font-semibold text-lg">Recado 3</h3>
+                                        <p>Conteúdo do recado 3...</p>
+                                    </a>
+                        
+                                    <!-- Recado 4 -->
+                                    <a href="#" class="flex-1 w-1/4 border border-gray-300 rounded-md p-4 hover:bg-gray-100">
+                                        <h3 class="font-semibold text-lg">Recado 4</h3>
+                                        <p>Conteúdo do recado 4...</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-x-4">
+                            <div class="flex-1 w-full flex flex-col gap-2 border border-zinc-950/30 p-4 mb-4 rounded-md field-courses">
+                                <legend class="font-medium text-primary">Escala de Trabalho</legend>
+                                <div class="flex flex-wrap gap-x-4">
+                                    <!-- Escala para Maio -->
+                                    <div class="flex-1 w-full flex flex-col gap-2 border border-zinc-950/30 p-4 mb-4 rounded-md field-courses">
+                                        <legend class="font-medium text-primary">Escala - Maio</legend>
+                                        <table class="w-full border border-zinc-950">
+                                            <thead>
+                                                <tr>
+                                                    <th class="px-2 py-1 border border-zinc-950">Dia</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">01</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">02</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">03</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">04</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">05</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">06</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">07</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">08</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">09</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">10</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">11</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">12</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">13</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">14</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">15</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">16</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">17</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">18</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">19</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">20</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">21</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">22</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">23</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">24</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">25</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">26</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">27</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">28</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">29</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">30</th>
+                                                    <th class="px-2 py-1 border border-zinc-950">31</th>
+
+                                                    
+                                                    <!-- Continuar com os dias até 31 -->
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Linha para o Turno 00-08 -->
+                                                <tr>
+                                                    <tr>
+                                                        <td class="px-4 py-2 border border-zinc-950">T00-08</td>
+                                                        <!-- Dia 1 - Turma D -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                        <!-- Dia 2 - Turma E -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                        <!-- Dia 3 - Turma E -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                        <!-- Dia 4 - Turma B -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                        <!-- Dia 5 - Turma A -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                        <!-- Dia 6 - Turma A -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                        <!-- Dia 7 - Turma C -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                        <!-- Dia 8 - Turma C -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                        <!-- Dia 9 - Turma D -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                        <!-- Dia 10 - Turma E -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                        <!-- Dia 11 - Turma E -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                        <!-- Dia 12 - Turma B -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                        <!-- Dia 13 - Turma B -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                        <!-- Dia 14 - Turma A -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                        <!-- Dia 15 - Turma C -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                        <!-- Dia 16 - Turma C -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                        <!-- Dia 17 - Turma D -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                        <!-- Dia 18 - Turma D -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                        <!-- Dia 19 - Turma E -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                        <!-- Dia 20 - Turma B -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                        <!-- Dia 21 - Turma A -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                        <!-- Dia 22 - Turma A -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                        <!-- Dia 23 - Turma C -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                        <!-- Dia 24 - Turma C -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                        <!-- Dia 25 - Turma D -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                        <!-- Dia 26 - Turma E -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                        <!-- Dia 27 - Turma E -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                        <!-- Dia 28 - Turma B -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                        <!-- Dia 29 - Turma A -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                        <!-- Dia 30 - Turma A -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                        <!-- Dia 31 - Turma C -->
+                                                        <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    </tr>
+                                                    
+                                                    
+                                                </tr>
+                                                <!-- Linha para o Turno 08-16 -->
+                                                <tr>
+                                                    <td class="px-4 py-2 border border-zinc-950">T08-16</td>
+                                                    <!-- Dia 1 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 2 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 3 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 4 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 5 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 6 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 7 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 8 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 9 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 10 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 11 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 12 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 13 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 14 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 15 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 16 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 17 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 18 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 19 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 20 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 21 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 22 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 23 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 24 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 25 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 26 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 27 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 28 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 29 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 30 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 31 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                </tr>
+                                                
+                                                <!-- Linha para o Turno 16-24 -->
+                                                <tr>
+                                                    <td class="px-4 py-2 border border-zinc-950">T16-24</td>
+                                                    <!-- Dia 1 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 2 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 3 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 4 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 5 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 6 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 7 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 8 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 9 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 10 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 11 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 12 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 13 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 14 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 15 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 16 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 17 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 18 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 19 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 20 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 21 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 22 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 23 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 24 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 25 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 26 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 27 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 28 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 29 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 30 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 31 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                </tr>
+                                                
+                                                <!-- Linha para Folga -->
+                                                <tr>
+                                                    <td class="px-4 py-2 border border-zinc-950">Folga</td>
+                                                    <!-- Dia 1 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 2 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 3 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 4 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 5 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 6 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 7 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 8 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 9 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 10 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 11 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 12 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 13 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 14 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 15 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 16 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 17 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 18 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 19 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 20 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 21 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 22 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 23 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 24 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 25 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 26 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 27 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 28 - Turma A -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-A"><a href="#" class="block w-full h-full">A</a></td>
+                                                    <!-- Dia 29 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 30 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                    <!-- Dia 31 - Turma D -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-D"><a href="#" class="block w-full h-full">D</a></td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <td class="px-4 py-2 border border-zinc-950">Folga</td>
+                                                    <!-- Dia 1 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 2 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 3 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 4 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 5 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 6 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 7 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 8 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 9 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 10 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 11 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 12 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 13 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 14 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 15 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 16 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 17 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 18 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 19 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 20 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 21 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 22 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 23 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 24 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 25 - Turma E -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-E"><a href="#" class="block w-full h-full">E</a></td>
+                                                    <!-- Dia 26 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 27 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 28 - Turma B -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-B"><a href="#" class="block w-full h-full">B</a></td>
+                                                    <!-- Dia 29 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 30 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                    <!-- Dia 31 - Turma C -->
+                                                    <td class="px-2 py-1 border border-zinc-950 bg-turma-C"><a href="#" class="block w-full h-full">C</a></td>
+                                                </tr>
+                                                
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- Continuar com escalas para outros meses, se necessário -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        
+                        <div class="flex flex-wrap gap-x-4">
+                            <div class="flex-1 w-full flex flex-col gap-2 border border-zinc-950/30 p-4 mb-4 rounded-md field-courses">
+                                <legend class="font-medium text-primary">Agenda</legend>
+                                <div class="flex flex-wrap gap-x-4">
+                                    <!-- Calendário para Maio -->
+                                    <div class="flex-1 w-full flex flex-col gap-2 border border-zinc-950/30 p-4 mb-4 rounded-md field-courses">
+                                        <legend class="font-medium text-primary">Calendário - Maio</legend>
+                                        <table class="w-full border border-zinc-950">
+                                            <thead>
+                                                <tr>
+                                                    <th class="px-4 py-2 border border-zinc-950">Domingo</th>
+                                                    <th class="px-4 py-2 border border-zinc-950">Segunda-feira</th>
+                                                    <th class="px-4 py-2 border border-zinc-950">Terça-feira</th>
+                                                    <th class="px-4 py-2 border border-zinc-950">Quarta-feira</th>
+                                                    <th class="px-4 py-2 border border-zinc-950">Quinta-feira</th>
+                                                    <th class="px-4 py-2 border border-zinc-950">Sexta-feira</th>
+                                                    <th class="px-4 py-2 border border-zinc-950">Sábado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                                                               <tr>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                    <td class="px-4 py-2 border bg-emerald-400 border-zinc-950">1</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">2</td>
+                                                    <td class="px-4 py-2 border bg-emerald-400 border-zinc-950">3</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">4</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 border border-zinc-950">5</td>
+                                                    <td class="px-4 py-2 border bg-red-500 border-zinc-950">6</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">7</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">8</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">9</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">10</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">11</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 border border-zinc-950">12</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">13</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">14</td>
+                                                    <td class="px-4 py-2 border bg-yellow-400 border-zinc-950">15</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">16</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">17</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">18</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 border border-zinc-950">19</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">20</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">21</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">22</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">23</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">24</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">25</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 border border-zinc-950">26</td>
+                                                    <td class="px-4 py-2 border bg-emerald-400 border-zinc-950">27</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">28</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">29</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">30</td>
+                                                    <td class="px-4 py-2 border bg-emerald-400 border-zinc-950">31</td>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                        
+                                    <!-- Calendário para Junho -->
+                                    <div class="flex-1 w-full flex flex-col gap-2 border border-zinc-950/30 p-4 mb-4 rounded-md field-courses">
+                                        <legend class="font-medium text-primary">Calendário - Junho</legend>
+                                        <table class="w-full border border-zinc-950">
+                                            <thead>
+                                                <tr>
+                                                    <th class="px-4 py-2 border border-zinc-950">Domingo</th>
+                                                    <th class="px-4 py-2 border border-zinc-950">Segunda-feira</th>
+                                                    <th class="px-4 py-2 border border-zinc-950">Terça-feira</th>
+                                                    <th class="px-4 py-2 border border-zinc-950">Quarta-feira</th>
+                                                    <th class="px-4 py-2 border border-zinc-950">Quinta-feira</th>
+                                                    <th class="px-4 py-2 border border-zinc-950">Sexta-feira</th>
+                                                    <th class="px-4 py-2 border border-zinc-950">Sábado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                    <td class="px-4 py-2 border border-zinc-950">1</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 border border-zinc-950">2</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">3</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">4</td>
+                                                    <td class="px-4 py-2 border bg-emerald-400 border-zinc-950">5</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">6</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">7</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">8</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 border border-zinc-950">9</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">10</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">11</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">12</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">13</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">14</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">15</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 border border-zinc-950">16</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">17</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">18</td>
+                                                    <td class="px-4 py-2 border bg-emerald-400 border-zinc-950">19</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">20</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">21</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">22</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 border border-zinc-950">23</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">24</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">25</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">26</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">27</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">28</td>
+                                                    <td class="px-4 py-2 border border-zinc-950">29</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 border border-zinc-950">30</td>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                
+                    </form>
+
+                </main>
+
+            </div>
+        </div>
+    </div>
+    {% include 'message.html' %}
+    {% include 'popup-set-password.html' %}
+    {% include 'popup-create-production-line.html' %}
+
+    
+
+</body>
+{% endblock %}

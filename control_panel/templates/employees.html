@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load permission_tags %}
+{% block title %}Funcionários{% endblock %}
+{% block content %}
+{% block head %}
+<script src="{% static 'js/popup-filter.js' %}" defer></script>
+<script src="{% static 'js/get-details-employee.js' %}" defer></script>
+<script src="{% static 'js/sidebar.js' %}" defer></script>
+<script src="{% static 'js/input-search.js' %}" defer></script>
+
+{% endblock %}
+
+<body class="relative min-h-[100vh] overflow-x-hidden">
+    <div class="min-h-[100vh] flex">
+        {% include 'aside.html' with active_tab='employees' %}
+        <div class="lg:ml-[240px] flex-1 flex gap-4 flex-col bg-secondary 2xl:ml-[300px]">
+            
+            <header class="flex justify-between items-center gap-2 px-8 py-6 2xl:px-12">
+                <div class="flex gap-2">
+                    <button id="toggleButton" class="text-zinc-950  rounded-md cursor-pointer lg:hidden">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                    <h2 class="text-xl md:text-2xl 2xl:text-3xl font-bold">Funcionários</h2>
+                </div>
+                {% if user|has_role:'gerente,administrador' %}
+                    <div class="flex gap-2">
+                        <a href="{% url 'register-employee' %}" class="flex gap-2 rounded-md px-2 py-2 bg-primary hover:bg-primary/90 md:px-4">
+                            <img class="w-6" src="{% static 'assets/svg/user-plus.svg' %}" alt="">
+                            <p class="hidden text-white font-medium md:block whitespace-nowrap">Registrar funcionário</p>
+                        
+                        </a>
+                        <a href="{% url 'export_csv' %}"
+                            class="flex gap-2 rounded-md bg-zinc-100 px-2 py-2 border border-zinc-950/10 hover:bg-zinc-200 md:px-4">
+                            <img class="cursor-pointer top-4 right-4 w-5" src="{% static 'assets/svg/export.svg' %}" alt="">
+                            <p class="font-medium hidden md:block">Exportar</p>
+                        </a>
+                    </div>
+                {% endif %}
+                
+            </header>
+            <main class="flex-1 flex flex-col px-8 2xl:px-12">
+                <div class="flex gap-2 justify-between ">
+                    <div class="flex-1 flex gap-2">
+                            
+                        <form action="{% url 'get_employees' %}" method="get" class="flex-1 flex gap-2 ">
+                            {% csrf_token %}
+                            <div class="w-[90%] md:w-full relative">
+                                <label class="absolute top-1/2 left-3 -translate-y-1/2" for="search">
+                                    <img class="cursor-pointer top-4 right-4 w-5" src="{% static 'assets/svg/search.svg' %}" alt="">
+                                </label>
+                                <input class="input-primary px-10 w-full input-search" type="search" value="{{search_value}}" placeholder="Re ou nome" name="search" id="search">
+                                <a class="hidden gap-1 absolute top-1/2 right-3 -translate-y-1/2  rounded-md bg-zinc-100 hover:bg-zinc-200 px-1 py-1 border border-zinc-950/10 md:px-2 button-reset transition-all duration-300" href="{% url 'get_employees' %}">
+                                    <img class="w-4" src="{% static 'assets/svg/close.svg' %}" alt="">
+                                    <p class="text-sm hidden md:block">Redefinir</p>
+                                </a>
+                            </div>
+                            <button type="submit"
+                                class="flex items-center gap-2 rounded-md border border-zinc-950/10 bg-zinc-100 px-2 py-2 hover:bg-zinc-200 md:px-4">
+                                <img class="cursor-pointer top-4 right-4 min-w-[20px] w-5" src="{% static 'assets/svg/search.svg' %}"
+                                    alt="">
+                                <p class="font-medium hidden md:block">Procurar</p>
+                    
+                            </button>
+                        </form>
+                    
+                        <button
+                            class="flex items-center gap-2 rounded-md border border-zinc-950/10 bg-primary px-2 py-2 button-filter hover:bg-primary/90 md:px-4">
+                            <img class="cursor-pointer top-4 right-4 min-w-[20px] w-5" src="{% static 'assets/svg/filter.svg' %}" alt="">
+                            <p class="font-medium text-white hidden md:block">Filtrar</p>
+                        
+                        </button>
+                    </div>
+                    {% if user|has_role:'gerente,administrador' %}
+                        <div class="fixed flex justify-center items-center w-full h-full bg-zinc-950/20 top-0 left-0 hidden form-filter">
+                            <div class="flex flex-col gap-4 w-full h-screen relative border rounded-md p-8 lg:w-1/3 lg:h-fit bg-white popups">
+                                <h3 class="font-bold text-lg">Filtro de funcionário</h3>
+                                <button class="absolute top-8 right-8 close-popup">
+                                    <img src="{% static 'assets/svg/close.svg' %}" alt="">
+                                </button>
+                                <form class=" flex flex-col gap-2" action="{% url 'get_employees' %}"
+                                    method="get">
+                                    {% csrf_token %}
+                                    <div class="py-2 flex flex-col gap-2">
+                                        {{form.state.label_tag}}
+                                        {{form.state}}
+                                        {{form.class_field.errors}}
+                                    </div>
+                                    <div class="py-2 flex flex-col gap-2">
+                                        {{form.class_field.label_tag}}
+                                        {{form.class_field}}
+                                        {{form.class_field.errors}}
+                                    </div>
+                    
+                                    <div class="flex flex-col gap-2 py-2">
+                                        <button class="px-4 py-2 rounded-md bg-primary text-white font-semibold hover:bg-primary/90">Aplicar</button>
+                                        <a class=" text-center px-4 py-2 rounded-md border font-medium border-zinc-950/10 bg-zinc-100 hover:bg-zinc-200"
+                                            href="{% url 'get_employees' %}">
+                                            Redefinir filtro
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    {% endif %}
+                
+                
+                </div>
+                {% if employees %}
+                <div class="flex-1 rounded-md py-2 flex flex-col mt-4">
+                    <h2 class="text-zinc-700 mb-2">{{qty_employees}} Funcionário{{qty_employees | pluralize}}</h2>
+                    <div
+                        class="bg-primary/5 divide-x border border-zinc-950/20 rounded-t-md divide-zinc-950/20 grid grid-cols-5 md:grid-cols-7 gap-4 px-4 lg:grid-cols-10">
+                        <div class="col-span-3 font-semibold p-2 flex">Nome</div>
+                        <div class="col-span-1 font-semibold p-2">Re</div>
+                        <div class="hidden col-span-3 font-semibold p-2 lg:block">Contatos</div>
+                        <div class="hidden col-span-2 font-semibold p-2 md:block">Status</div>
+                        <div class="col-span-1 font-semibold p-2">
+                            <p class="hidden lg:block">Ver Mais</p>
+                            <p class="block lg:hidden">Mais</p>
+                        </div>
+                    </div>
+                
+                
+                    <div class="divide-y divide-zinc-950/20 border border-t-transparent flex flex-col items-center w-full rounded-b-md">
+                        {% for employee in employees %}
+                        <div class="w-full grid grid-cols-5 gap-4 px-4 py-2 md:grid-cols-7 lg:grid-cols-10">
+                            <div class="col-span-3 flex items-center gap-2 p-2">
+                                <div class="flex justify-center items-center rounded-full overflow-hidden min-w-[40px] md:min-w-[35px] aspect-1">
+                                    <img class="object-cover object-top w-10 h-10" src="{{employee.photo.url}}" alt="">
+                                </div>
+                                <div class="overflow-hidden">
+                                    <p class="font-semibold md:whitespace-nowrap text-ellipsis overflow-hidden">{{employee.first_name}} {{employee.last_name}} </p>
+                                    <p class="text-typography-label">{{employee.job}}</p>
+                                </div>
+                            </div>
+                
+                            <p class="col-span-1 flex items-center p-2">{{employee.re}}</p>
+                            <div class="hidden col-span-3 p-2 lg:block">
+                                <div class="flex gap-2">
+                                    <img class="w-4" src="{% static 'assets/svg/mail.svg' %}" alt="Ícone email">
+                                    <p class="text-typography-label text-ellipsis overflow-hidden">{{employee.email}}</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <img class="w-4" src="{% static 'assets/svg/phone.svg' %}" alt="Ícone email">
+                                    <p class="text-typography-label">{{employee.phone}}</p>
+                                </div>
+                            </div>
+                            <div class="hidden col-span-2 items-center p-2 md:block md:col-span-2">
+                                <p
+                                    class="flex px-4 py-1 rounded-md text-sm w-2/3 text-center {% if employee.state == 'Ativo' %}bg-emerald-400{% elif employee.state == 'Férias' %} bg-yellow-400 {% elif employee.state == 'Afastado' %} bg-red-400 {% endif %}">
+                                    {{employee.state}}
+                                </p>
+                            </div>
+                            <div class="flex justify-center items-center col-span-1">
+                                <button id="{{employee.re}}"
+                                    class="rounded-md p-1 duration-150 button-get-employee hover:border hover:border-zinc-950/20">
+                                    <img src="{% static 'assets/svg/chevron-right-blue.svg' %}" alt="">
+                                </button>
+                
+                            </div>
+                
+                        </div>
+                        {% endfor %}
+                        
+                    </div>
+                    {% include 'paginator.html' %}
+
+                {% else %}
+                    <div class="flex-1 flex flex-col gap-2 justify-center items-center">
+                        <div class="flex flex-col items-center">
+                            <p class="text-typography-secondary">Nenhum funcionário encontrado!</p>
+                            <a class=" text-primary hover:text-typography-primary" href="{% url 'get_employees' %}">
+                                Redefinir filtro
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+                </div>
+                 
+            </main>
+            
+    </div>
+    
+    
+    {% include 'popup-employee.html' %}
+    {% include 'message.html' %}
+</body>
+{% endblock %}

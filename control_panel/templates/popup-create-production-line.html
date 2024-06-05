@@ -1,0 +1,16 @@
+{% load static %}
+<div class="hidden fixed inset-0 bg-zinc-950/30 w-full h-full justify-center items-center popup-create-production-line">
+    <div class="relative flex flex-col gap-4 p-4 rounded-md bg-white shadow-md popups">
+        <h2 class="font-bold text-lg text-zinc-700">Registrar linha</h2>
+        <button class="absolute top-4 right-4 button-close-popup-production-line">
+            <img src="{% static 'assets/svg/close.svg' %}" alt="">
+        </button>
+        <form class="flex gap-2" action="{% url 'create_production_line' %}" method="post">
+            {% csrf_token %}
+            <div class="flex flex-col gap-2">
+                <input name="name" class="input-primary" placeholder="Nome" maxlength="20" type="text" id="id_name" required>
+            </div>
+            <button type="submit" class="button-primary font-semibold">Confirmar</button>
+        </form>
+    </div>
+</div>

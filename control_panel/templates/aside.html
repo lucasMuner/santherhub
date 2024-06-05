@@ -1,0 +1,143 @@
+{% load static %}
+{% load permission_tags %}
+<aside id="sidebar-multi-level-sidebar" class="hidden fixed top-0 left-0 w-3/5 h-screen flex-col items-center px-4 py-8 z-50 md:w-2/5 lg:w-[240px] 2xl:w-[300px] lg:flex bg-primary duration-300 sidebar ">
+    <button class="button-close-sidebar lg:hidden">
+        <img  src="{% static 'assets/svg/close-white.svg' %}" alt="">
+    </button>
+    <h1>
+        <a class="flex justify-center" href="{% url 'get_teste' %}">
+            <img class="w-1/2 md:w-2/5 lg:w-2/3" src="{% static 'assets/logo-santher-branco.png' %}" alt="">
+        </a>
+    </h1>
+
+    <nav class="flex-1 flex flex-col gap-2 w-full mt-8 ">
+        <a href="{% url 'get_teste' %}" class="flex gap-2 text-white rounded-md px-4 py-3 cursor-pointer {% if active_tab == 'teste_usuário' %} bg-white {% else %} hover:bg-zinc-100/30 {% endif %}">
+            <svg  xmlns="http://www.w3.org/2000/svg" 
+                width="24" 
+                height="24" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="#FFFFFF"
+                stroke-width="2" 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                class=" lucide lucide-home {% if active_tab == 'teste_usuário' %} stroke-[#616161] {% endif %}">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+            
+            <p class="font-semibold  {% if active_tab == 'teste_usuário' %} text-[#616161] {% else %} text-white {% endif %}" >Painel</p>
+        </a>
+        {% if user|has_role:'supervisor,gerente,administrador' %}
+            <a href="{% url 'get_employees' %}" class="flex gap-2 rounded-md px-4 py-3 cursor-pointer {% if active_tab == 'employees' %} bg-white {% else %} hover:bg-zinc-100/30 {% endif %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-users {% if active_tab == 'employees' %} stroke-[#616161] {% endif %}">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                <p class="font-semibold {% if active_tab == 'employees' %} text-typography-primary {% else %} text-white  {% endif %}" >Funcionários</p>
+            </a>
+        {% endif %}
+        <a href="{% url 'get_profile' %}" class="flex gap-2 text-white rounded-md px-4 py-3 cursor-pointer {% if active_tab == 'profile' %} bg-white {% else %} hover:bg-zinc-100/30 {% endif %}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-circle-user-round {% if active_tab == 'profile' %} stroke-[#616161] {% endif %}">
+                <path d="M18 20a6 6 0 0 0-12 0" />
+                <circle cx="12" cy="10" r="4" />
+                <circle cx="12" cy="12" r="10" />
+            </svg>
+            
+            <p class="font-semibold  {% if active_tab == 'profile' %} text-[#616161] {% else %} text-white {% endif %}" >Dados</p>
+        </a>
+    </a>
+    <a href="{% url 'get_seguranca' %}" class="flex gap-2 text-white rounded-md px-4 py-3 cursor-pointer {% if active_tab == 'security' %} bg-white {% else %} hover:bg-zinc-100/30 {% endif %}">
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             width="24" 
+             height="24" 
+             viewBox="0 0 24 24" 
+             fill="none" 
+             stroke="#FFFFFF"
+             stroke-width="2" 
+             stroke-linecap="round" 
+             stroke-linejoin="round" 
+             class="feather feather-heart {% if active_tab == 'security' %} stroke-[#616161] {% endif %}">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+        </svg>
+        <p class="font-semibold {% if active_tab == 'security' %} text-[#616161] {% else %} text-white {% endif %}">Segurança e Saúde</p>
+    </a>
+    
+
+        <div class="flex flex-col">
+            <a id="dropdown-toggle" href="#" class="relative flex items-center gap-2 text-white rounded-md px-4 py-3 cursor-pointer {% if active_tab == 'lpp' %} bg-white {% else %} hover:bg-zinc-100/30 {% endif %}" data-collapse-toggle="dropdown_treinamento">
+                <div class="flex items-center justify-between w-full" id="dropdown-content">
+                    <div class="flex items-center gap-2">
+                        <!-- Ícone antes do texto -->
+                        <svg xmlns="http://www.w3.org/2000/svg" 
+                            width="24" 
+                            height="24" 
+                            viewBox="0 0 24 24" 
+                            fill="none" 
+                            stroke="#FFFFFF"
+                            stroke-width="2" 
+                            stroke-linecap="round" 
+                            stroke-linejoin="round" 
+                            class="lucide lucide-book {% if active_tab == 'lpp' %} stroke-[#616161] {% endif %}">
+                            <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16l-6-3-6 3V6z"></path>
+                        </svg>
+                        <p class="font-semibold {% if active_tab == 'lpp' %} text-[#616161] {% else %} text-white {% endif %}">Treinamentos</p>
+                    </div>
+                    <!-- Setinha -->
+                    <svg id="arrow" xmlns="http://www.w3.org/2000/svg" 
+                        width="24" 
+                        height="24" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="#FFFFFF"
+                        stroke-width="2" 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        class="lucide lucide-chevron-down {% if active_tab == 'lpp' %} stroke-[#616161] {% endif %}">
+                        <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                </div>
+            </a>
+                            
+            <ul id="dropdown-menu" class="hidden shadow-lg py-1 mt-2 ml-4">
+                <li>
+                    <a href="{% url 'get_lpp' %}" class="{% if active_tab == 'lpp' %} bg-white text-[#616161] {% else %}text-white hover:bg-zinc-100/30 {% endif %} font-semibold ml-8 relative flex items-center gap- rounded-md px-4 py-3 cursor-pointer">LPP</a>
+                </li>
+                <li>
+                    <a href="#" class="font-semibold ml-8 mt-2 relative flex items-center gap-2 text-white rounded-md px-4 py-3 cursor-pointer {% if active_tab == 'its' %} bg-zinc-100/30 {% else %} hover:bg-zinc-100/30 {% endif %}">IT's</a>
+                </li>
+            </ul>
+        </div>
+        
+        
+        
+        
+    </nav>
+    <a href="{% url 'logout' %}" class="w-full flex gap-2 text-white rounded-md px-4 py-3 cursor-pointer {% if active_tab == 'logout' %} bg-white {% else %} hover:bg-zinc-100/30 {% endif %}">
+        <svg xmlns="http://www.w3.org/2000/svg" 
+            width="24" 
+            height="24" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="#FFFFFF"
+            stroke-width="2" 
+            stroke-linecap="round" 
+            stroke-linejoin="round" 
+            class="lucide lucide-log-out {% if active_tab == 'logout' %} stroke-[#616161] {% endif %}">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" x2="9" y1="12" y2="12" />
+        </svg>
+        <p class="text-white font-semibold {% if active_tab == 'logout' %} text-[#616161] {% else %} text-white {% endif %}" >Sair</p>
+    </a>
+    
+</aside>
+<script src="{% static 'js/dropdown-sidebar.js' %}" defer></script>
+
+

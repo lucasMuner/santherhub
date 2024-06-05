@@ -1,0 +1,20 @@
+{% load static %}
+<div class="flex flex-col gap-4 border border-zinc-950/20 rounded-md p-8 bg-primary/5">
+    <h2 class="font-semibold text-xl text-primary">Disponibilidade</h2>
+    <div class="grid grid-cols-3 gap-4 container-availability-grid">
+        {% for day in availability %}
+        <div class="font-semibold">{{day.name}}</div>
+        {% if day.initial_time %}
+        <div class="text-center font-medium">{{day.initial_time}}</div>
+        {% else %}
+        <div class="text-center font-medium">-</div>
+        {% endif %}
+    
+        {% if day.end_time %}
+        <div class="text-center font-medium">{{day.end_time}}</div>
+        {% else %}
+        <div class="text-center font-medium">-</div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>

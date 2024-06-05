@@ -1,0 +1,38 @@
+{% load static %}
+<div class="hidden fixed bg-zinc-950/30 inset-0 w-screen h-screen flex justify-center items-center popup-available-times">
+    <div class="relative flex flex-col gap-4 rounded-md bg-white w-[95%] p-8 popups md:w-3/5 lg:w-2/5">
+        <div>
+            <h2 class="text-xl font-bold">Disponibilidade</h2>
+            <p class="text-typography-secondary">Informe sua disponibilidade de horário</p>
+        </div>
+        <form class="flex flex-col gap-8" method="post" action="{% url 'get_available_times' %}">
+            {% csrf_token %}
+            <div class="flex flex-col gap-2">
+                {{ formset.management_form }}
+                
+                {% for form in formset %}
+                <div class="flex justify-between items-center gap-2">
+                    <div class="flex items-center gap-4">
+                        {{form.id}}
+
+                        <p class="font-semibold text-left">{{form.instance.name}}</p>
+                    </div>
+                    <div class="flex gap-4 w-[75%] md:w-1/2">
+                        {{ form.initial_time }}
+                        {{form.end_time}}
+                
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        
+            <div class="flex justify-end gap-2">
+                <button type="button"
+                    class="w-[100px] rounded-md bg-zinc-100 text-typography-primary px-4 py-2 hover:bg-zinc-200 border border-zinc-950/5 button-cancel-available-times">Cancelar</button>
+                <button class="w-[100px] button-primary button-available-times font-semibold">Salvar</button>
+            </div>
+        </form>
+    </div>
+
+
+</div>

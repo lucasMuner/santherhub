@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load permission_tags %}
+{% block title %}LPP{% endblock %}
+{% block content %}
+{% block head %}
+<script src="{% static 'js/popup-available-times.js' %}" defer></script>
+{% if user|has_role:'gerente,administrador' %}
+<script src="{% static 'js/popup-create-production-line.js' %}" defer></script>
+{% endif %}
+<script src="{% static 'js/sidebar.js' %}" defer></script>
+
+{% endblock %}
+
+<body class="overflow-x-hidden">
+    <div>
+        {% include 'aside.html' with active_tab='trainings' %}
+        <div class="lg:ml-[240px] flex-1 flex flex-col duration-300 min-h-screen bg-secondary 2xl:ml-[300px]">
+            <header class="px-8 py-6 2xl:px-12">
+                <div class="flex justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <button id="toggleButton" class="text-zinc-950  rounded-md cursor-pointer lg:hidden">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16m-7 6h7" />
+                            </svg>
+                        </button>
+                        <h1 class="font-bold text-xl md:text-2xl 2xl:text-3xl">Lição Ponto a Ponto</h1>
+                    </div>
+                    <button
+                        class="relative flex flex-col items-center gap-2 rounded-md bg-zinc-100 p-2 hover:bg-zinc-200 h-fit border border-zinc-950/10 button-available-times md:flex-row md:w-fit md:px-4">
+                        <img src="{% static 'assets/svg/timer.svg' %}" alt="">
+
+                        <p class="hidden font-medium md:block">Informar
+                            disponibilidade</p>
+
+                        {% if not availability_filled %}
+                        <span class="absolute w-5 h-5 bg-primary rounded-full -top-2 -right-2 text-white"></span>
+                        {% endif %}
+                    </button>
+
+                </div>
+            </header>
+            <main class="flex-1 flex flex-col gap-4 px-8 pb-8 2xl:px-12">
+                <div class="flex gap-2">
+                    <div class="flex-1 flex justify-between rounded-md ">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="flex justify-center items-center w-[100px] h-[100px] md:w-[110px] md:h-[110px] rounded-full overflow-hidden bg-secondary">
+                                <img class="object-cover object-top field-photo w-[110px] h-[110px]"
+                                    src="{{employee.photo.url}}" alt="">
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <p class="font-semibold text-lg">{{employee.first_name}} {{employee.last_name}} </p>
+                                <p class="w-fit bg-zinc-100 rounded-md text-center px-2 py-1 ">{{employee.job}}</p>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+                <div class="flex-1 flex flex-col gap-4 rounded-md ">
+                    <div class="flex-1 flex flex-col gap-4 rounded-md ">
+                        <div class="flex justify-between items-center">
+                            <h2 class="font-semibold text-xl">Linhas</h2>
+                            {% if user|has_role:'gerente,administrador' %}
+                            <button
+                                class="flex gap-2 bg-primary text-white px-2 py-2 rounded-md button-create-production-line md:px-4 hover:bg-primary/90">
+                                <img src="{% static 'assets/svg/plus.svg' %}" alt="">
+                                <p class="hidden md:block text-white font-medium">Registrar linha</p>
+
+                            </button>
+                            {% endif %}
+                        </div>
+                        <div class="flex flex-col gap-6">
+                            {% if production_lines %}
+                            <div
+                                class="flex-1  gap-4  {% if production_lines|length == 1 %} grid-cols-1 {% else %} grid place-content-start grid-cols-3 md:grid-cols-4 lg:grid-cols-6 {% endif %}">
+                                {% for production_line in production_lines %}
+                                <a href="{% url 'get_production_line' slug=production_line.slug %}"
+                                    class="relative bg-primary/5 flex flex-col gap-2 justify-center items-center {% if production_lines|length != 1 %} aspect-1 {% endif %} px-6 py-12 rounded-md hover:scale-[101%] duration-300 border border-zinc-950/20 border-l-[5px] border-l-primary hover:bg-primary/10">
+                                    <p
+                                        class="w-full flex justify-center items-center p-2 {% if production_lines|length != 1 %} h[100px] {% endif %} rounded-md text-center">
+                                        <span class="text-primary font-bold md:text-lg">{{production_line.name}}</span>
+                                    </p>
+
+                                </a>
+
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <p class="text-typography-secondary text-center ">Nenhuma linha cadastrada!</p>
+                            {% endif %}
+
+                            {% include 'availability-employee.html' %}
+                        </div>
+
+
+                    </div>
+                </div>
+            </main>
+
+        </div>
+        {% include 'message.html' %}
+        {% if user|has_role:'gerente,administrador' %}
+        {% include 'popup-create-production-line.html' %}
+        {% endif %}
+        {% include 'popup-hours-extra.html' %}
+    </div>
+</body>
+{% endblock %}

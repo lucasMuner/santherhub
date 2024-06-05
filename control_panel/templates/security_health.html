@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load permission_tags %}
+{% block title %}Segurança e Saúde{% endblock %}
+{% block content %}
+{% block head %}
+<script src="{% static 'js/arrange-popup.js' %}" defer></script>
+<script src="{% static 'js/popup-available-times.js' %}" defer></script>
+{% if user|has_role:'gerente,administrador' %}
+<script src="{% static 'js/popup-create-production-line.js' %}" defer></script>
+{% endif %}
+<script src="{% static 'js/sidebar.js' %}" defer></script>
+
+{% endblock %}
+
+<body class="overflow-x-hidden">
+    <div>
+        {% include 'aside.html' with active_tab='security' %}
+        <div class="lg:ml-[240px] flex-1 flex flex-col duration-300 min-h-screen bg-secondary 2xl:ml-[300px]">
+            <header class="px-8 py-6 2xl:px-12">
+                <div class="flex justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <button id="toggleButton" class="text-zinc-950  rounded-md cursor-pointer lg:hidden">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16m-7 6h7" />
+                            </svg>
+                        </button>
+                        <h1 class="font-bold text-xl md:text-2xl 2xl:text-3xl">Segurança e Saúde</h1>
+                    </div>
+                    
+
+                </div>
+            </header>
+            <main class="flex-1 flex flex-wrap gap-4 px-8 pb-8 2xl:px-12">
+                <div class="flex flex-wrap gap-x-4">
+                    <div class="flex-1 w-full flex flex-col gap-2 border border-zinc-950/30 p-4 mb-4 rounded-md field-courses">
+                        <legend class="font-medium text-primary">Treinamentos Obrigatórios</legend>
+                        <table class="w-full border border-zinc-950">
+                            <thead>
+                                <tr>
+                                    <th class="px-4 py-2 border border-zinc-950">Treinamentos</th>
+                                    <th class="px-4 py-2 border border-zinc-950">Realizado</th>
+                                    <th class="px-4 py-2 border border-zinc-950">Data de Realização</th>
+                                    <th class="px-4 py-2 border border-zinc-950">Data de Validade</th>
+                                    <th class="px-4 py-2 border border-zinc-950">Agendamento</th>
+                                    <th class="px-4 py-2 border border-zinc-950">Comprovante</th>
+                                </tr>
+                            </thead>
+                                <tr>
+                                    <td class="px-4 py-2 border border-zinc-950">NR --</td>
+                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2024</td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2025</td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="flex bg-emerald-400 text-white px-4 py-2 rounded-md button-set-arrange">Agendar</button></td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="bg-primary text-white px-4 py-2 rounded-md">Comprovante</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 border border-zinc-950">NR --</td>
+                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2024</td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2025</td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="flex bg-emerald-400 text-white px-4 py-2 rounded-md button-set-arrange">Agendar</button></td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="bg-primary text-white px-4 py-2 rounded-md">Comprovante</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 border border-zinc-950">NR --</td>
+                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2024</td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2025</td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="flex bg-emerald-400 text-white px-4 py-2 rounded-md button-set-arrange">Agendar</button></td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="bg-primary text-white px-4 py-2 rounded-md">Comprovante</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 border border-zinc-950">NR --</td>
+                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2024</td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2025</td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="flex bg-emerald-400 text-white px-4 py-2 rounded-md button-set-arrange">Agendar</button></td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="bg-primary text-white px-4 py-2 rounded-md">Comprovante</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 border border-zinc-950">NR --</td>
+                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2024</td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2025</td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="flex bg-emerald-400 text-white px-4 py-2 rounded-md button-set-arrange">Agendar</button></td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="bg-primary text-white px-4 py-2 rounded-md">Comprovante</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 border border-zinc-950">NR --</td>
+                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2024</td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2025</td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="flex bg-emerald-400 text-white px-4 py-2 rounded-md button-set-arrange">Agendar</button></td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="bg-primary text-white px-4 py-2 rounded-md">Comprovante</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 border border-zinc-950">NR --</td>
+                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2024</td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2025</td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="flex bg-emerald-400 text-white px-4 py-2 rounded-md button-set-arrange">Agendar</button></td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="bg-primary text-white px-4 py-2 rounded-md">Comprovante</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 border border-zinc-950">NR --</td>
+                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2024</td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2025</td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="flex bg-emerald-400 text-white px-4 py-2 rounded-md button-set-arrange">Agendar</button></td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="bg-primary text-white px-4 py-2 rounded-md">Comprovante</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 border border-zinc-950">NR --</td>
+                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2024</td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2025</td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="flex bg-emerald-400 text-white px-4 py-2 rounded-md button-set-arrange">Agendar</button></td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="bg-primary text-white px-4 py-2 rounded-md">Comprovante</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 border border-zinc-950">NR --</td>
+                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2024</td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2025</td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="flex bg-emerald-400 text-white px-4 py-2 rounded-md button-set-arrange">Agendar</button></td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="bg-primary text-white px-4 py-2 rounded-md">Comprovante</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 border border-zinc-950">NR --</td>
+                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2024</td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2025</td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="flex bg-emerald-400 text-white px-4 py-2 rounded-md button-set-arrange">Agendar</button></td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="bg-primary text-white px-4 py-2 rounded-md">Comprovante</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 border border-zinc-950">NR --</td>
+                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2024</td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2025</td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="flex bg-emerald-400 text-white px-4 py-2 rounded-md button-set-arrange">Agendar</button></td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="bg-primary text-white px-4 py-2 rounded-md">Comprovante</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 border border-zinc-950">NR --</td>
+                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2024</td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2025</td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="flex bg-emerald-400 text-white px-4 py-2 rounded-md button-set-arrange">Agendar</button></td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="bg-primary text-white px-4 py-2 rounded-md">Comprovante</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 border border-zinc-950">NR --</td>
+                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2024</td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2025</td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="flex bg-emerald-400 text-white px-4 py-2 rounded-md button-set-arrange">Agendar</button></td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="bg-primary text-white px-4 py-2 rounded-md">Comprovante</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 border border-zinc-950">NR --</td>
+                                    <td class="px-4 py-2 border border-zinc-950"></td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2024</td>
+                                    <td class="px-4 py-2 border border-zinc-950">28/04/2025</td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="flex bg-emerald-400 text-white px-4 py-2 rounded-md button-set-arrange">Agendar</button></td>
+                                    <td class="px-4 py-2 border border-zinc-950"><button class="bg-primary text-white px-4 py-2 rounded-md">Comprovante</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+            
+                    <!-- Passaporte de Segurança -->
+                    <div class="flex-1 w-full flex flex-col gap-2 border border-zinc-950/30 p-4 mb-4 rounded-md field-courses">
+                        <legend class="font-medium text-primary">Passaporte de Segurança</legend>
+                        <img src="{% static 'assets/passaporte-de-segurança.png' %}">
+                        <div class="flex-1 flex flex-col lg:w-full">
+                            <label for="id_re">Número do Passaporte:</label>
+                            <input class="input-primary input-disabled" type="text" name="re" id="id_re" value="XXXXXX/XXXXXX">
+                            <label for="id_re">Nome:</label>
+                            <input class="input-primary input-disabled" type="text" name="re" id="id_re" value="{{employee.first_name}} {{employee.last_name}}">
+                            <label for="id_re">Re:</label>
+                            <input class="input-primary input-disabled" type="text" name="re" id="id_re" value="{{employee.re}}">
+                            <label for="id_re">Empresa:</label>
+                            <input class="input-primary input-disabled" type="text" name="re" id="id_re" value="Santher">
+                            <label for="id_re">Data de Venciento: </label>
+                            <input class="input-primary input-disabled" type="text" name="re" id="id_re" value="28/04/2025">
+                            <button class="bg-primary mt-2 text-white px-4 py-2 rounded-md">Gerar PDF</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </main> 
+        </div>
+        {% include 'message.html' %}
+        {% if user|has_role:'gerente,administrador' %}
+        {% include 'popup-create-production-line.html' %}
+        {% endif %}
+        {% include 'popup-set-arrange.html' %}
+    </div>
+</body>
+{% endblock %}

@@ -1,0 +1,864 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load permission_tags %}
+{% block title %}LPP{% endblock %}
+{% block content %}
+{% block head %}
+<script src="{% static 'js/popup-available-times.js' %}" defer></script>
+{% if user|has_role:'gerente,administrador' %}
+<script src="{% static 'js/popup-create-production-line.js' %}" defer></script>
+{% endif %}
+<script src="{% static 'js/sidebar.js' %}" defer></script>
+
+{% endblock %}
+<body class="overflow-x-hidden">
+    <style>
+        div {
+            display: grid;
+        }
+
+        .field-courses {
+    overflow: hidden; /* Para garantir que o conteúdo não exceda os limites */
+}
+
+.container-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 100%; /* Garante que não exceda o contêiner pai */
+    overflow: auto; /* Permite rolagem se necessário */
+
+}
+
+.folha.a4_vertical {
+    margin: 0 auto;
+    max-width: 100%;
+    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura total */
+}
+
+/* Estilos adicionais para a seção título */
+.titulo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+
+}
+
+.div_images {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px; /* Ajuste conforme necessário */
+    height: auto;
+}
+
+.img_santher{
+    max-width: 100%;
+    height: auto;
+}
+
+.img_tpm {
+    max-width: 80%;
+    height: auto;
+}
+
+.lpp {
+    flex-grow: 1;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2em; /* Ajuste conforme necessário */
+}
+
+    
+        .a4_vertical {
+            width: 793px;
+            height: 1122px;
+        }
+    
+        .a4_horizontal {
+            width: 1122px;
+            height: 793px;
+        }
+    
+        .container {
+            justify-content: center;
+        }
+    
+        .page {
+            border: 5px solid black;
+            justify-content: center;
+            height: 1000px;
+            max-width: 900px;
+        }
+    
+        .cabecalho {
+            display: grid;
+            grid-template-columns: 5% 45% 15% 25% 10%;
+            grid-template-rows: repeat(2, 50%);
+            /* ajuste o número de linhas conforme necessário */
+            width: 100%;
+            height: 200px;
+            border: 0px solid black;
+        }
+    
+        .item {
+            border: 2px solid black;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        .item_double {
+            grid-template-columns: 100%;
+            grid-template-rows: repeat(2, 50%);
+            border: 2px solid black;
+        }
+    
+        .item_double_two {
+            grid-template-columns: 100%;
+            grid-template-rows: 40% 60%;
+            border: 2px solid black;
+        }
+    
+        .sub_item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+    
+        .div_down {
+            border-top: 3px solid black;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        .div_right {
+            border-left: 3px solid black;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        .item_fourth {
+            grid-template-columns: repeat(2, 50%);
+            grid-template-rows: repeat(2, 50%);
+            border: 2px solid black;
+        }
+    
+        .rotate {
+            transform: rotate(-90deg);
+            font-weight: bold;
+        }
+    
+        .text_center {
+            text-align: center;
+        }
+    
+        .negrito {
+            font-weight: bold;
+        }
+    
+        .large_font {
+            font-size: 25px;
+        }
+    
+        .m_font {
+            font-size: 20px;
+        }
+    
+        .quadrado {
+            width: 30px;
+            height: 30px;
+            border: 2px solid black;
+        }
+    
+        .conhecimento {
+            margin-left: 5px;
+            width: 75%;
+        }
+    
+        .conteudo {
+            display: grid;
+            grid-template-columns: 100%;
+            grid-template-rows: 20% 30% 20% 30%;
+            border: 1px solid black;
+            height: 800px;
+        }
+    
+        .revisao_div {
+            justify-content: right;
+            font-size: 21px;
+        }
+    
+        .passos_two {
+            grid-template-columns: repeat(2, 50%);
+            grid-template-rows: 100%;
+            max-width:1000px;
+        }
+    
+        .border_left {
+            border-left: 6px solid black;
+        }
+    
+        .border_right {
+            border-right: 6px solid black;
+        }
+    
+        .passos {
+            overflow: hidden;
+            font-size: 20px;
+            text-align: center;
+            margin-left: 5px;
+        }
+    
+        .imagem-filha {
+            max-height: 230px;
+            max-width: 380px;
+            margin-top: 15px;
+        }
+    
+        .image {
+            justify-content: center;
+        }
+    
+        .titulo {
+            display: grid;
+            grid-template-columns: 20% 60% 20%;
+            grid-template-rows: 100%;
+            height: 75px;
+        }
+    
+        .border {
+            border: 1px solid black;
+        }
+    
+        .lpp {
+            justify-content: center;
+            align-items: center;
+            font-size: 35px;
+        }
+    
+        .img_santher {
+            width: 100%;
+        }
+    
+        .img_tpm {
+            width: 100%;
+            height: 65%;
+        }
+    
+        .div_images {
+            justify-content: center;
+            align-items: center;
+        }
+    
+        .elaborador {
+            font-size: 15px;
+        }
+    
+        .el_por {
+            font-size: 16px;
+        }
+    
+        .registro {
+            display: grid;
+            grid-template-columns: 100%;
+            grid-template-rows: repeat(4, 25%);
+            border: 1px solid black;
+            height: 800px;
+        }
+    
+        .div_registro {
+            display: grid;
+            grid-template-columns: 5% 15% 8% 8% 8% 8% 8% 8% 8% 8% 8% 8%;
+            grid-template-rows: 100%;
+    
+        }
+    
+        .div_registro_campos {
+            display: grid;
+            grid-template-columns: 100%;
+            grid-template-rows: 20% 20% 20% 20% 20%;
+            border-left: 1px solid;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .div_infos{
+            border-bottom: 1px solid;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            align-items: center;
+            
+        }
+        
+        .parag_registro{
+    
+            justify-content: center;
+            align-items: center;
+            font-size:16px;
+        }
+        
+        .border_top{
+            border-top: 3px solid;
+        }
+        
+        .parag{
+            width: 100%;
+            
+        }
+        .bg_cinza{
+            background-color: grey;
+        }
+        
+            .border_top_two{
+            border-top: 5px solid;
+        }
+        
+        .nomes{
+            font-size: 10px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        
+        
+    </style>
+    <div>
+        {% include 'aside.html' with active_tab='lpp' %}
+        <div class="lg:ml-[240px] flex-1 flex flex-col duration-300 min-h-screen bg-secondary 2xl:ml-[300px]">
+            <header class="px-8 py-6 2xl:px-12">
+                <div class="flex justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <button id="toggleButton" class="text-zinc-950  rounded-md cursor-pointer lg:hidden">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16m-7 6h7" />
+                            </svg>
+                        </button>
+                        <h1 class="font-bold text-xl md:text-2xl 2xl:text-3xl">LPP</h1>
+                    </div>
+                </div>
+            </header>
+            <main class="flex-1 flex gap-4 px-8 pb-8 2xl:px-12">
+                <div class="flex-1 flex gap-x-4">
+                    <div class="flex-1 w-full flex flex-col gap-2 border border-zinc-950/30 p-4 mb-4 rounded-md field-courses">
+                        <legend class="font-medium text-primary">Modelo LPP</legend>
+                        <div class="container-wrapper">
+                            <div class="container">
+                                <div class="folha a4_vertical">
+                                    <div class="titulo">
+                                        <div class="div_images">
+                                            <img class="img_santher" src="https://th.bing.com/th/id/OIP.QAFxOMRkvwIhEfYBRT874AHaB9?rs=1&pid=ImgDetMain">
+                                        </div>
+                                        <div class="lpp negrito">LIÇÃO PONTO A PONTO</div>
+                                        <div class="div_images">
+                                            <img class="img_tpm" src="../../static/assets/tpm.png">
+                                        </div>
+                                    </div>
+                                    <div class="page">
+                                        <div class="cabecalho">
+                                            <div class="item">
+                                                <p class="rotate">Tema</p>
+                                            </div>
+                                            <div class="item large_font">Quantificação de Adesivo</div>
+                                            <div class="item_double">
+                                                <div class="sub_item negrito m_font">Área:</div>
+                                                <div class="sub_item div_down negrito m_font">Linha:</div>
+                                            </div>
+                                            <div class="item_fourth">
+                                                <div class="sub_item text_center">PERSONAL CARE</div>
+                                                <div class="sub_item div_right negrito m_font">Número:</div>
+                                                <div class="sub_item div_down m_font">L80</div>
+                                                <div class="sub_item div_down div_right negrito m_font">Revisão:</div>
+                                            </div>
+                                            <div class="item_double">
+                                                <div class="sub_item"></div>
+                                                <div class="sub_item div_down"></div>
+                                            </div>
+                                            <div class="item">
+                                                <p class="rotate">Classificação</p>
+                                            </div>
+                                            <div class="item_fourth">
+                                                <div class="sub_item">
+                                                    <div class="quadrado"></div>
+                                                    <p class="conhecimento">Conhecimento Básico</p>
+                                                </div>
+                                                <div class="sub_item">
+                                                    <div class="quadrado"></div>
+                                                    <p class="conhecimento">Caso Problema</p>
+                                                </div>
+                                                <div class="sub_item">
+                                                    <div class="quadrado"></div>
+                                                    <p class="conhecimento">Caso de Melhoria</p>
+                                                </div>
+                                                <div class="sub_item">
+                                                    <div class="quadrado"></div>
+                                                    <p class="conhecimento">Segurança/M. Amb.</p>
+                                                </div>
+                                            </div>
+                                            <div class="item_double_two">
+                                                <div class="sub_item negrito el_por text_center">Elaborado por:</div>
+                                                <div class="sub_item div_down text_center elaborador">LUCAS MUNER GARCIA</div>
+                                            </div>
+                                            <div class="item_double_two">
+                                                <div class="sub_item negrito m_font">Data da Elaboração:</div>
+                                                <div class="sub_item div_down large_font">18/04/2024</div>
+                                            </div>
+                                            <div class="item_double_two">
+                                                <div class="sub_item text_center elaborador">LEANDRO SILVA</div>
+                                                <div class="sub_item div_down"></div>
+                                            </div>
+                                        </div>
+                                        <div class="conteudo">
+                                            <div class="passos">
+                                                <p></p>
+                                            </div>
+                                            <div class="passos_two">
+                                                <div class="image">
+                                                    <img class="imagem-filha" src="">
+                                                </div>
+                                                <div class="passos">
+                                                    <p></p>
+                                                </div>
+                                            </div>
+                                            <div class="passos">
+                                                <p></p>
+                                            </div>
+                                            <div class="passos_two">
+                                                <div class="passos">
+                                                    <p></p>
+                                                </div>
+                                                <div class="image">
+                                                    <img class="imagem-filha" src="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="revisao_div">
+                                            <p class="negrito">S-TPM-RQ.001 rev. 01</p>
+                                        </div>
+
+                                        
+                                        
+                                    
+                                </div>
+                                <br>
+                                        <br>
+
+                                <div class="folha a4_vertical ">
+                                        <div class="titulo">
+                                            <div class="div_images">
+                                                <img class="img_santher" src="https://th.bing.com/th/id/OIP.QAFxOMRkvwIhEfYBRT874AHaB9?rs=1&pid=ImgDetMain">
+                                            </div>
+                                            <div class="lpp negrito">LIÇÃO PONTO A PONTO</div>
+                                            <div class="div_images">
+                                                <img class="img_tpm" src="../../static/assets/tpm.png">
+                                            </div>
+                                        </div>  
+                                      <div class="page ">
+                                          <div class="cabecalho ">
+                                              <div class="item ">
+                                                  <p class="rotate ">Tema</p>
+                                              </div>
+                                              <div class="item large_font ">Quantificação de Adesivo</div>
+                                              <div class="item_double ">
+                                                  <div class="sub_item negrito m_font ">Área:</div>
+                                                  <div class="sub_item div_down negrito m_font ">Linha:</div>
+                                              </div>
+                                              <div class="item_fourth ">
+                                                  <div class="sub_item text_center ">PERSONAL CARE</div>
+                                                  <div class="sub_item div_right negrito m_font ">Número:</div>
+                                                  <div class="sub_item div_down m_font ">L80</div>
+                                                  <div class="sub_item div_down div_right negrito m_font ">Revisão:</div>
+                                              </div>
+                                              <div class="item_double ">
+                                                  <div class="sub_item "></div>
+                                                  <div class="sub_item div_down "></div>
+                                              </div>
+                                              <div class="item ">
+                                                  <p class="rotate ">Classificação</p>
+                                              </div>
+                                              <div class="item_fourth ">
+                                                  <div class="sub_item ">
+                                                      <div class="quadrado "></div>
+                                                      <p class="conhecimento ">Conhecimento Básico</p>
+                                                  </div>
+                                                  <div class="sub_item ">
+                                                      <div class="quadrado "></div>
+                                                      <p class="conhecimento ">Caso Problema</p>
+                                                  </div>
+                                                  <div class="sub_item ">
+                                                      <div class="quadrado "></div>
+                                                      <p class="conhecimento ">Caso de Melhoria</p>
+                                                  </div>
+                                                  <div class="sub_item ">
+                                                      <div class="quadrado "></div>
+                                                      <p class="conhecimento ">Segurança/M. Amb.</p>
+                                                  </div>
+                                              </div>
+                                              <div class="item_double_two ">
+                                                  <div class="sub_item negrito el_por text_center ">Elaborado por:</div>
+                                                  <div class="sub_item div_down text_center elaborador ">LUCAS MUNER GARCIA</div>
+                                              </div>
+                                              <div class="item_double_two ">
+                                                  <div class="sub_item negrito m_font ">Data da Elaboração:</div>
+                                                  <div class="sub_item div_down large_font ">18/04/2024</div>
+                                              </div>
+                                              <div class="item_double_two ">
+                                                  <div class="sub_item text_center elaborador ">LEANDRO SILVA</div>
+                                                  <div class="sub_item div_down "></div>
+                                              </div>
+                                      </div>
+                                            <div class="registro ">
+                                                  <div class="div_registro">
+                                                      <div class="parag_registro border_top"><p class="rotate">REGISTRO DE TREINAMENTO</p></div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos negrito ">Data de Transmissão</div>
+                                                          <div class="div_infos ">Instrutor</div>
+                                                          <div class="div_infos">Nome do Aluno</div>
+                                                          <div class="div_infos">RE do Aluno</div>
+                                                          <div class="div_infos">Visto do Aluno</div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                  </div>
+                                                                      <div class="div_registro ">
+                                                      <div class="parag_registro border_top_two"><p class="rotate">REGISTRO DE TREINAMENTO</p></div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos negrito">Data de Transmissão</div>
+                                                          <div class="div_infos">Instrutor</div>
+                                                          <div class="div_infos">Nome do Aluno</div>
+                                                          <div class="div_infos">RE do Aluno</div>
+                                                          <div class="div_infos">Visto do Aluno</div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                  </div>
+                                                                      <div class="div_registro ">
+                                                      <div class="parag_registro border_top_two"><p class="rotate">REGISTRO DE TREINAMENTO</p></div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos negrito">Data de Transmissão</div>
+                                                          <div class="div_infos">Instrutor</div>
+                                                          <div class="div_infos">Nome do Aluno</div>
+                                                          <div class="div_infos">RE do Aluno</div>
+                                                          <div class="div_infos">Visto do Aluno</div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                  </div>
+                                                                      <div class="div_registro ">
+                                                      <div class="parag_registro border_top_two"><p class="rotate">REGISTRO DE TREINAMENTO</p></div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos negrito">Data de Transmissão</div>
+                                                          <div class="div_infos">Instrutor</div>
+                                                          <div class="div_infos">Nome do Aluno</div>
+                                                          <div class="div_infos">RE do Aluno</div>
+                                                          <div class="div_infos">Visto do Aluno</div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                      <div class="div_registro_campos border_top">
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                          <div class="div_infos nomes"></div>
+                                                      </div>
+                                                  </div>
+                                          </div>
+                                          
+                                          </div>
+                                                    <div class="revisao_div "><p class="negrito ">S-TPM-RQ.001 rev. 01</p></div>
+                                  
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            
+        </div>
+    </div>
+</body>
+{% endblock %}

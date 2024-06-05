@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load permission_tags %}
+{% block title %}Jornada{% endblock %}
+{% block content %}
+{% block head %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<script src="{% static 'js/sidebar.js' %}" defer></script>
+{% endblock %}
+
+<body class="overflow-x-hidden">
+    <div>
+        {% include 'aside.html' with active_tab='journey' %}
+        <div class="lg:ml-[240px] flex-1 flex flex-col duration-300 min-h-screen bg-secondary 2xl:ml-[300px]">
+            <header class="px-8 py-6 2xl:px-12">
+                <div class="flex justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <button id="toggleButton" class="text-zinc-950 rounded-md cursor-pointer lg:hidden">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16m-7 6h7" />
+                            </svg>
+                        </button>
+                        <h1 class="font-bold text-xl md:text-2xl 2xl:text-3xl">Jornada</h1>
+                    </div>
+                </div>
+            </header>
+            <main class="flex-1 flex gap-4 px-8 pb-8 2xl:px-12">
+                <div class="flex-1 flex gap-x-4">
+                    <div class="flex-1 w-full flex flex-col gap-4 border border-zinc-950/30 p-4 mb-4 rounded-md field-courses">
+                        <legend class="font-medium text-primary"></legend>
+                        <!-- Acordion -->
+                        <div class="accordion">
+                            <button class="accordion-header flex justify-between items-center w-full py-3 px-6 rounded-md focus:outline-none">
+                                <span class="font-semibold text-3xl text-black ">Resumo</span>
+                                <i class="fas fa-chevron-down text-lg text-black"></i>
+                            </button>
+                            <div class="accordion-content hidden p-4 border-b border-blue-500">
+                                <p class="text-gray-800">Conteúdo do Acordeão 1</p>
+                            </div>
+                            <button class="accordion-header flex justify-between items-center w-full py-3 px-6 bg-blue-500 rounded-md focus:outline-none">
+                                <span class="font-semibold text-3xl  text-black">Experiências</span>
+                                <i class="fas fa-chevron-down text-lg text-black"></i>
+                            </button>
+                            <div class="accordion-content hidden p-4 border-b border-blue-500">
+                                <p class="text-gray-800">Conteúdo do Acordeão 2</p>
+                            </div>
+                            <button class="accordion-header flex justify-between items-center w-full py-3 px-6 bg-blue-500 rounded-md focus:outline-none">
+                                <span class="font-semibold text-3xl text-black">Formação</span>
+                                <i class="fas fa-chevron-down text-lg text-black"></i>
+                            </button>
+                            <div class="accordion-content hidden p-4 border-b border-blue-500">
+                                <p class="text-gray-800">Conteúdo do Acordeão 3</p>
+                            </div>
+                            <button class="accordion-header flex justify-between items-center w-full py-3 px-6 bg-blue-500 rounded-md focus:outline-none">
+                                <span class="font-semibold text-3xl  text-black">Conquistas</span>
+                                <i class="fas fa-chevron-down text-lg text-black"></i>
+                            </button>
+                            <div class="accordion-content hidden p-4 border-b border-blue-500">
+                                <p class="text-gray-800">Conteúdo do Acordeão 4</p>
+                            </div>
+                        </div>
+                        <!-- Fim do Acordeão -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script>
+        // Script para controlar o acordeão
+        document.addEventListener('DOMContentLoaded', function () {
+            const accHeaders = document.querySelectorAll('.accordion-header');
+
+            accHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('i');
+
+                    content.classList.toggle('hidden');
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-up');
+                });
+            });
+        });
+    </script>
+</body>
+{% endblock %}
