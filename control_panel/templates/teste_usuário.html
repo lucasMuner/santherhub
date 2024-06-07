@@ -4,6 +4,7 @@
 {% block title %}Painel{% endblock %}
 {% block content %}
 {% block head %}
+<script src="{% static 'js/popup-available-times.js' %}" defer></script>
 <script src="{% static 'js/popup-set-password.js' %}" defer></script>
 <script src="{% static 'js/form-employee.js' %}" defer></script>
 {% if user|has_role:'administrador' %}
@@ -151,7 +152,9 @@
             
             
                                 </div>
+                                
                                 <div class="flex-1 flex mt-4  flex-col gap-4 rounded-md">
+                                    <button class="button-available-times" type="button">
                                     <div class="flex-1 gap-4 {% if production_lines|length == 1 %} grid-cols-1 {% else %} grid place-content-start grid-cols-3 md:grid-cols-4 lg:grid-cols-6 {% endif %}">
                                         <div class="relative h-6 bg-yellow-400 flex flex-col gap-2 justify-center items-center px-6 py-12 rounded-md hover:scale-[101%] duration-300 border border-zinc-950/20 border-l-[5px] border-l-primary ">
                                             <p class="w-full flex justify-center items-center p-2 rounded-md text-center">
@@ -159,7 +162,9 @@
                                             </p>
                                         </div>
                                     </div>
+                                </button> 
                                 </div>
+                            
                             </div>
                             
                                                    
@@ -769,6 +774,7 @@
     {% include 'message.html' %}
     {% include 'popup-set-password.html' %}
     {% include 'popup-create-production-line.html' %}
+    {% include 'popup-hours-extra.html' %}
 
     
 
