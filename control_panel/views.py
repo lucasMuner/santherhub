@@ -317,7 +317,7 @@ def get_panel(request):
     user = request.user
     production_lines = None
     employee = Employee.objects.filter(user_id=user.id).first()
-    
+    formset = DayOfWeekFormset(instance=employee.availability)
     if employee:
         if hasattr(employee, 'production_line') and employee.production_line.exists():
             production_lines = employee.production_line.all()
@@ -329,7 +329,10 @@ def get_panel(request):
     if request.method == "GET":
         context.update({
             "employee": employee,
+            "formset": formset,
             "production_lines": production_lines,
+            "availability": employee.availability.days.all(),
+            "availability_filled": employee.availability.availability_filled
         })    
         
     return render(request, "panel.html", context)
@@ -359,10 +362,10 @@ def get_journey(request):
     return render(request, "journey.html", context)
 
 #View que faz a validação dos valores informados no formuário de disponibilidade de horário
-@login_required
 def get_available_times(request):
     user = request.user
     employee = Employee.objects.filter(user_id=user.id).first()
+    
     if request.method == "POST":
         availability = employee.availability
         formset = DayOfWeekFormset(request.POST, instance=employee.availability)
@@ -375,7 +378,7 @@ def get_available_times(request):
             messages.success(request, "Disponibilidade atualizada com sucesso!") 
         else:
             messages.error(request, "Informações inválidas!")
-    return redirect('get_panel')
+    return redirect('get_teste')
 
 #View que obtem as informações do formulário com base no nível de acesso ao sistema. Somente o administrador consegue alterar os próprios dados
 @login_required
@@ -417,6 +420,7 @@ def get_teste_user(request):
     user = request.user
     employee = Employee.objects.filter(user_id=user.id).first()
     production_lines = None
+    formset = DayOfWeekFormset(instance=employee.availability)
     context = {
         "form_set_password": CustomSetPasswordForm(user=user)
     }
@@ -432,7 +436,10 @@ def get_teste_user(request):
     if request.method == "GET":
         context.update({
             "employee": employee,
+            "formset": formset,
             "production_lines": production_lines,
+            "availability": employee.availability.days.all(),
+            "availability_filled": employee.availability.availability_filled
         })   
         form = None
         if has_role(user, 'administrador'):
